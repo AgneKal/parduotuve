@@ -3,6 +3,7 @@ import { skaiciuokleRouter } from './routes/skaiciuokle.router';
 import { corsHeaders } from './middlewares/cors.middleware';
 import { productsRouter } from './routes/products.router';
 import { authRouter } from './routes/auth.router';
+import { authMiddleware } from './middlewares/auth.middleware';
 
 const app:Application=express();
 
@@ -13,6 +14,8 @@ app.use(express.urlencoded());
 app.use(express.json());
 
 app.use(corsHeaders);
+
+// app.get('/products', authMiddleware);
 
 app.use('/skaiciuokle', skaiciuokleRouter);
 app.use('/products', productsRouter);
