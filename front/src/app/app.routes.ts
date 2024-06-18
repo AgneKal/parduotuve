@@ -5,12 +5,40 @@ import { UpdateProductsComponent } from './components/products/update-products/u
 import { HomePageComponent } from './components/home-page/home-page.component';
 import { SigninComponent } from './components/auth/signin/signin.component';
 import { LoginComponent } from './components/auth/login/login.component';
+import { ListUsersComponent } from './components/users/list-users/list-users.component';
+import { adminGuard } from './guards/admin.guard';
+import { UpdateUserComponent } from './components/users/update-user/update-user.component';
+import { viewGuard } from './guards/view.guard';
+import { editGuard } from './guards/edit.guard';
 
 export const routes: Routes = [
-    {path: "products/list", component:  ListProductsComponent},
-    {path: "products/new", component: NewProductComponent},
-    {path: "products/:id", component: UpdateProductsComponent},
+    {
+        path:"products/list",component:ListProductsComponent,
+        canActivate:[viewGuard]
+    },
+    {
+        path:"products/new", component:NewProductComponent,
+        canActivate:[editGuard]
+    },
+    {
+        path:"products/:id", component:UpdateProductsComponent,
+        canActivate:[editGuard]
+    },
+
     {path: "auth/signin", component: SigninComponent},
     {path: "auth/login", component: LoginComponent},
+
+    {
+        path: "users/list", 
+        component: ListUsersComponent,
+        canActivate:[adminGuard]
+    },
+
+    {
+        path: "users/:id", 
+        component: UpdateUserComponent,
+        canActivate:[adminGuard]
+    },
+
     {path: "", component: HomePageComponent},
 ];

@@ -3,7 +3,7 @@ import { skaiciuokleRouter } from './routes/skaiciuokle.router';
 import { corsHeaders } from './middlewares/cors.middleware';
 import { productsRouter } from './routes/products.router';
 import { authRouter } from './routes/auth.router';
-import { authMiddleware } from './middlewares/auth.middleware';
+import { userRouter } from './routes/user.router';
 
 const app:Application=express();
 
@@ -20,6 +20,7 @@ app.use(corsHeaders);
 app.use('/skaiciuokle', skaiciuokleRouter);
 app.use('/products', productsRouter);
 app.use('/auth', authRouter);
+app.use('/users', userRouter);
 
 
 export {app};

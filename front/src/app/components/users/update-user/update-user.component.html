@@ -1,0 +1,34 @@
+<!-- <app-error [isError]="isError" [text]="errorText"></app-error>
+
+*ngIf="!isError" -->
+
+<div class="card mt-3">
+    <div class="card-header">
+        Atnaujinti vartotoją
+    </div>
+    <div class="card-body">
+        <form (ngSubmit)="userSubmit(f)" #f="ngForm">
+            <div class="mb-3">
+                <label for="" class="form-label">Vardas</label>
+                <input type="text" class="form-control" name="name" value="" ngModel [(ngModel)]="name">
+            </div>
+            <div class="mb-3">
+                <label for="" class="form-label">El. pašto adresas</label>
+                <input type="number" class="form-control" name="email" value="" ngModel [(ngModel)]="email">
+            </div>
+            <div class="mb-3">
+                <label for="" class="form-label">Slaptažodis</label>
+                <input type="number" class="form-control" name="pass" value="" ngModel [(ngModel)]="password">
+            </div>
+            <div class="mb-3">
+                <label for="" class="form-label">Tipas</label>
+                <select name="" id="" class="form-control" ngModel [(ngModel)]="type">
+                    <option value="0">Super administratorius</option>
+                    <option value="1">Administratorius</option>
+                    <option value="2">Vartotojas</option>
+                </select>
+            </div>
+            <button class="btn btn-success" type="submit">Atnaujinti</button>
+        </form>
+    </div>
+</div>
