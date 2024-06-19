@@ -10,6 +10,7 @@ import { adminGuard } from './guards/admin.guard';
 import { UpdateUserComponent } from './components/users/update-user/update-user.component';
 import { viewGuard } from './guards/view.guard';
 import { editGuard } from './guards/edit.guard';
+import { ProfileComponent } from './components/users/profile/profile.component';
 
 export const routes: Routes = [
     {
@@ -38,6 +39,12 @@ export const routes: Routes = [
         path: "users/:id", 
         component: UpdateUserComponent,
         canActivate:[adminGuard]
+    },
+
+    {
+        path: "profile", 
+        component: ProfileComponent,
+        //reikia guardo ar prisijungęs
     },
 
     {path: "", component: HomePageComponent},

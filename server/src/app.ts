@@ -1,4 +1,4 @@
-import express, {Application, Request, Response} from 'express';
+import express, { Application } from 'express';
 import { skaiciuokleRouter } from './routes/skaiciuokle.router';
 import { corsHeaders } from './middlewares/cors.middleware';
 import { productsRouter } from './routes/products.router';
