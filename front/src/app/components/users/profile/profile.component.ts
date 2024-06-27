@@ -19,9 +19,10 @@ export class ProfileComponent {
  
   constructor (private userService:UsersService, private authService:AuthService, private router: Router){
     this.profileForm = new FormGroup({
-      'name':new FormControl(null),
-      'email':new FormControl(null),
-      'password':new FormControl(null)
+      'name': new FormControl(null),
+      'email': new FormControl(null),
+      'password': new FormControl(null),
+      'image': new FormControl(null)
     });
     console.log(authService.user);
     if (authService.user!=null && authService.user.id!=null){
@@ -31,6 +32,7 @@ export class ProfileComponent {
           name:user.name,
           email:user.email,
           password:'',
+          image: null
         });
         this.profileForm.updateValueAndValidity();;
       });
@@ -39,9 +41,9 @@ export class ProfileComponent {
  
   public onSubmitForm(){
     const values = this.profileForm.value;
-    this.userService.updateUser(new User(values.email, this.authService.user!.id, values.name, values.password)).subscribe ((result) => {
-      this.router.navigate(['/']);
-    })
+    this.userService.updateUserAndPhoto(new User(values.email, this.authService.user!.id, values.name, values.password ), values.image ).subscribe((result) => {
+      this.router.navigate(["/"]); 
+    });
   }
 
   public onProfileImageChange(event: Event){
@@ -51,6 +53,12 @@ export class ProfileComponent {
       this.imagePreview = reader.result as String;
     }
     reader.readAsDataURL(file);
+
+    this.profileForm.patchValue({
+      image: file
+    });
+
+    this.profileForm.get('image')?.updateValueAndValidity();
   }
  
 }

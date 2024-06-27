@@ -1,6 +1,8 @@
+import path from "path";
 import { pool } from "../db/connect";
 import { User } from "../models/user";
 import bcrypt from "bcrypt";
+import fs from 'fs';
 
 export class UserController {
     static async getAll(req: any, res: any){
@@ -9,52 +11,94 @@ export class UserController {
     };
     
     static async getUser(req: any, res: any){
-        const userId = req.params.id;
-        const [result] = await pool.query<User[]>("SELECT * FROM users WHERE id=?", [userId]);
-
-        if(!(req.user.type === 0 || userId === req.user.id)){
-            res.status(404).json({
-                "text" : "Vartotojas neturi teisių redaguoti"
+        const userId=req.params.id;
+        if (!(req.user.type == 0 || userId == req.user.id)){
+            res.status(400).json({
+                text:"Jūs neturite teisės redaguoti įrašą"
             })
         }
-
+        
+        const [result]=await pool.query<User[]>("SELECT * FROM users WHERE id=?", [userId]);
         if (result.length == 0){
             res.status(404).json({
-                "text" : "Vartotojas nerastas"
+                text:"Vartotojas nerastas"
             });
-        } else {
-            res.json(result[0])
+        }else{
+            res.json(result[0]);
         }
-    };
+    }
+
+    static async updateUserRecord(id: any, email: any, name: any, password: any, type: any, fileURL: any){
+        if (password != ''){
+            const passwordHash = await bcrypt.hash(password, 12);
+
+            await pool.query("UPDATE users SET email=?, name=?, password=? WHERE id=? ", [
+                email,
+                name,
+                passwordHash,
+                id
+            ]);
+        } else {
+            await pool.query("UPDATE users SET email=?, name=? WHERE id=? ",[
+                email,
+                name,
+                id
+            ]);
+        }
+
+        if (type!=null){
+            await pool.query("UPDATE users SET type=? WHERE id=? ",[
+                type,
+                id
+            ]);
+        }
+
+        if (fileURL!=null){
+            const [oldUser] = await pool.query<User[]>("SELECT * FROM users WHERE id=?", [id]);
+            fs.unlinkSync(path.join('./img/'+oldUser[0].img.split('/').pop()));
+            await pool.query("UPDATE users SET img=? WHERE id=? ",[
+                fileURL,
+                id
+            ]);
+        }
+    }
 
     static async update(req: any, res: any){
         const userId = req.params.id;
-        if(!(req.user.type === 0 || userId === req.user.id)){
-            res.status(404).json({
-                "text" : "Vartotojas neturi teisių redaguoti"
+
+        if ( !(req.user.type == 0 || userId == req.user.id)){
+            res.status(400).json({
+                text:"Jūs neturite teisės redaguoti įrašą"
             })
         }
 
-        if(req.body.password != ''){
-            const passwordHash = await bcrypt.hash(req.body.password, 12);
-    
-            await pool.query("UPDATE users SET email=?, name=?, password=?, type=? WHERE id=?", [req.body.email, req.body.name, passwordHash, req.body.type, userId]);
-
-        }else {
-
-            await pool.query("UPDATE users SET email=?, name=?, type=? WHERE id=?", [req.body.email, req.body.name, req.body.type, userId]);
-        }
-
-        res.json({
-            "success": true
+        await UserController.updateUserRecord(userId, req.body.email, req.body.name, req.body.password, req.body.type, null );
+        res.json({  
+            success:true
         });
 
-    };
+    }
 
     static async delete(req: any, res: any){
-        await pool.query("DELETE FROM users WHERE id=?", [req.params.id])
+        await pool.query("DELETE FROM users WHERE id=?", [req.params.id]);
         res.json({
-        "success": true
+            success:true
         });
-    };
+
+    }
+
+
+    static async updateProfile(req: any, res: any){
+        const userId=req.params.id;
+
+        console.log("Vartotojo profilis atnaujintas")
+        console.log(req.body);
+
+        const url = req.protocol+"://"+req.get("host")+"/img/"+req.file.filename ;
+
+        UserController.updateUserRecord(userId, req.body.email, req.body.name, req.body.password, null, url );
+        res.json({
+            success:true
+        });
+    }
 }

@@ -5,8 +5,8 @@ const authMiddleware = ((req:any, res:any, next:any)=>{
     try {
         const token = req.headers.auth;
         dotenv.config();
-        if (process.env.TOKEN_SECKRET != null){
-            const user = jwt.verify(token, process.env.TOKEN_SECKRET) as {id: number, tyoe:number};
+        if (process.env.TOKEN_SECRET != null){
+            const user = jwt.verify(token, process.env.TOKEN_SECRET) as {id: number, tyoe:number};
             req.user = user;
         }
         next();

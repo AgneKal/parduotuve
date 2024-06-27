@@ -7,6 +7,7 @@ const productsRouter = express.Router();
 
 productsRouter.get('/', authMiddleware, ProductsController.getAll);
 productsRouter.get('/:id', authMiddleware, editProductsMiddleware, ProductsController.getProduct);
+productsRouter.get('/filter/:filter', authMiddleware, editProductsMiddleware, ProductsController.filterProducts);
 productsRouter.post('/', authMiddleware, editProductsMiddleware, ProductsController.insert);
 productsRouter.put('/', authMiddleware, editProductsMiddleware, ProductsController.update);
 productsRouter.delete('/:id', authMiddleware, editProductsMiddleware, ProductsController.delete);

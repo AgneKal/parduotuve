@@ -49,14 +49,14 @@ export class AuthController {
         }
 
         
-        if (process.env.TOKEN_SECKRET != null){
+        if (process.env.TOKEN_SECRET != null){
             dotenv.config();
             let token = jwt.sign(
                 {
                     'id': user.id,
                     'type': user.type
                 }, 
-                process.env.TOKEN_SECKRET,
+                process.env.TOKEN_SECRET,
                 {
                     expiresIn: '2 days'
                 }
@@ -66,7 +66,8 @@ export class AuthController {
                 'name': user.name,
                 'email': user.email,
                 'token': token,
-                'type': user.type
+                'type': user.type,
+                'img': user.img
             });
         }
 

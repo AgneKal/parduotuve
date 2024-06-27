@@ -14,7 +14,10 @@
                     <a class="nav-link" *ngIf="authService.canEdit()" aria-current="page" routerLink="products/new">Pridėti naują prekę</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link " aria-current="page" href="#">Užsakymai</a>
+                    <a class="nav-link " *ngIf="authService.canViewData()" aria-current="page" routerLink="/orders/list">Užsakimų sąrašas</a>
+                </li>
+                <li class="nav-item" *ngIf="authService.canEdit()">
+                    <a class="nav-link " aria-current="page" routerLink="/orders/new">Pridėti naują užsakymą</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link " *ngIf="authService.canEditUsers()" routerLink="users/list" aria-current="page">Vartotojų sąrašas</a>
